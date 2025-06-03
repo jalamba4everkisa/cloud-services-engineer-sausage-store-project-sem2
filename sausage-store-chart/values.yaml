@@ -70,6 +70,12 @@ backend-report:
 
 infra:
   postgresql:
+    image: postgres:14.18-alpine3.22
+    containerPort: 5432
+    env:
+      POSTGRES_DB: sausage-store
+      POSTGRES_USER: sausage-user
+      POSTGRES_PASSWORD: sausagepassword
   ### Опишите необходимые переменные для развертывания PostgresQL в кластере Kubernetes
   mongodb:
     env:
