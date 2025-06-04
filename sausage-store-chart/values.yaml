@@ -45,6 +45,7 @@ backend:
   revisionHistoryLimit: 15
   replicas: 1
   strategy:
+    type: RollingUpdate
   ### Опишите стратегию RollingUpdate для бэкенда
   image: YOUR_DOCKERHUB/sausage-backend:latest
   imagePullPolicy: Always
