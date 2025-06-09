@@ -36,8 +36,8 @@ backend:
     scrape: "true"
   env:
     postgresUri: jdbc:postgresql://postgresql:5432/sausage-store
-    postgresUser: store
-    postgresPassword: storepassword
+    postgresUser: sausage-user
+    postgresPassword: sausagepassword
     reportPath: /logs/reports
     logPath: /logs
   service:
