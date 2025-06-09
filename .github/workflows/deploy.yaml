@@ -6,9 +6,9 @@ on:
       - main
 
 env:
-#  NEXUS_HELM_REPO: ${{ secrets.NEXUS_HELM_REPO }}
-#  NEXUS_HELM_REPO_USER: ${{ secrets.NEXUS_HELM_REPO_USER }}
-#  NEXUS_HELM_REPO_PASSWORD: ${{ secrets.NEXUS_HELM_REPO_PASSWORD }}
+  NEXUS_HELM_REPO: ${{ secrets.NEXUS_HELM_REPO }}
+  NEXUS_HELM_REPO_USER: ${{ secrets.NEXUS_HELM_REPO_USER }}
+  NEXUS_HELM_REPO_PASSWORD: ${{ secrets.NEXUS_HELM_REPO_PASSWORD }}
   SAUSAGE_STORE_NAMESPACE: ${{ secrets.KUBE_NAMESPACE }}
   KUBE_CONFIG: ${{ secrets.KUBE_CONFIG }}
 #  VAULT_TOKEN: ${{ secrets.VAULT_TOKEN }}
@@ -64,13 +64,27 @@ jobs:
             push: true
             tags: jalambakisa/sausage-backend-report:latest
   # Упаковываем helm-чарт и пушим его в Nexus
-#  add_helm_chart_to_nexus:
-#      name: Add Helm Chart To Nexus
-#      runs-on: ubuntu-latest
-#      needs: build_and_push_to_docker_hub
-
-#      steps:
-      #### Опишите необходимые шаги
+  add_helm_chart_to_nexus:
+      name: Add Helm Chart To Nexus
+      runs-on: ubuntu-latest
+      needs: build_and_push_to_docker_hub
+      steps:
+        - name: Checkout
+          uses: actions/checkout@v3
+        - name: Install Helm
+          uses: azure/setup-helm@v1
+          with:
+            version: v3.4.0
+        
+        - name: Add nexus repo and push helm-chart
+          run: |
+            helm plugin install https://github.com/chartmuseum/helm-push
+            helm repo add chartmuseum ${{ secrets.NEXUS_HELM_REPO }} --username ${{ secrets.NEXUS_HELM_REPO_USER }} --password ${{ secrets.NEXUS_HELM_REPO_PASSWORD }}
+            export CURRENT_VER=`helm show chart ./sausage-store-chart | yq '.version'`
+            export NEW_VER=`echo "$CURRENT_VER" | awk -F. '{$NF = $NF + 1;} 1' | sed 's/ /./g'`
+            yq e -i '.version = env(NEW_VER)' sausage-store-chart/Chart.yaml
+            cd sausage-store-chart
+            helm cm-push --version=$NEW_VER --context-path="/repository/sausage-store-nndanchenko" . chartmuseum
 
   # Деплоим приложения в кластер Kubernetes с помощью helm-чарт
 #  deploy_helm_chart_to_kubernetes:
