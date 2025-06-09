@@ -124,3 +124,4 @@ infra:
       MONGO_INITDB_ROOT_PASSWORD: reportspassword
       MONGO_INITDB_DATABASE: sausage-store
     containerPort: 27017
+ 
