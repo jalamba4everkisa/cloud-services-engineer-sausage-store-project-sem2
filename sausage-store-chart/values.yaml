@@ -19,7 +19,7 @@ frontend:
     path: /
     pathType: Prefix
   containerPort: 80
-  image: YOUR_DOCKERHUB/sausage-frontend:latest
+  image: jalambakisa/sausage-frontend:latest
   resources:
     requests:
       memory: "128Mi"
@@ -47,7 +47,7 @@ backend:
   strategy:
     type: RollingUpdate
   ### Опишите стратегию RollingUpdate для бэкенда
-  image: YOUR_DOCKERHUB/sausage-backend:latest
+  image: jalambakisa/sausage-backend:latest
   imagePullPolicy: Always
   resources:
     requests:
@@ -65,6 +65,18 @@ backend:
     periodSeconds: 10
   ### Опишите LivenessProbe для бэкенда
   vpa:
+    updatePolicy:
+      updateMode: "Recreate"
+    resourcePolicy:
+      containerPolicies:
+        - containerName: "*"
+          minAllowed:
+            cpu: 25m
+            memory: 0Mi
+          maxAllowed:
+            cpu: 25m
+            memory: 500Mi
+          controlledResources: ["cpu", "memory"]
   ### Опишите VPA для бэкенда
 
 backend-report:
@@ -72,7 +84,7 @@ backend-report:
   revisionHistoryLimit: 15
   strategy:
     type: Recreate
-  image: YOUR_DOCKERHUB/sausage-backend-report:latest
+  image: jalambakisa/sausage-backend-report:latest
   containerPort: 8080
   resources:
     requests:
