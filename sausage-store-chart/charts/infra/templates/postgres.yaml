@@ -28,10 +28,10 @@ spec:
             memory: "128Mi"
             cpu: "50m"
           limits:
-            memory: "256Mi"
+            memory: "512Mi"
         volumeMounts:
         - name: postgresql-data
-          mountPath: /data/db
+          mountPath: /var/lib/postgresql
   volumeClaimTemplates:
   - metadata:
       name: postgresql-data
