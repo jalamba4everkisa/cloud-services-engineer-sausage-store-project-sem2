@@ -55,7 +55,7 @@ backend:
       cpu: "25m"
     limits:
       memory: "512Mi"
-      cpu: "25m"
+      cpu: "1"
   containerPort: 8080
   livenessProbe:
     httpGet:
