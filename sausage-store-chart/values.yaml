@@ -115,8 +115,8 @@ infra:
     containerPort: 5432
     env:
       POSTGRES_DB: sausage-store
-      POSTGRES_USER: sausage-user
-      POSTGRES_PASSWORD: sausagepassword
+      POSTGRES_USER: store
+      POSTGRES_PASSWORD: storepassword
   ### Опишите необходимые переменные для развертывания PostgresQL в кластере Kubernetes
   mongodb:
     env:
